@@ -17,6 +17,7 @@ final class Lane extends GridPane {
 	private Label label;
 	private List<Region> tasks;
 	private int row;
+
 	
 	/**
 	 * Erzeugt eine neue Lane.

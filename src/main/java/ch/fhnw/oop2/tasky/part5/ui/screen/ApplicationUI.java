@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import ch.fhnw.oop2.tasky.part1.model.impl.InMemoryMapRepository;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 
@@ -22,7 +25,9 @@ public final class ApplicationUI extends GridPane {
 	private Lane doing;
 	private Lane done;
 	private Lane review;
-
+	private InMemoryMapRepository taskRepository; //
+	private LongProperty taskSelected; //
+	
 	/**
 	 * Erzeugt einen neuen MainScreen.
 	 */
@@ -32,10 +37,13 @@ public final class ApplicationUI extends GridPane {
 	}
 	
 	private void initializeControls() {
+		taskRepository = new InMemoryMapRepository(); //
+		taskSelected = new SimpleLongProperty(); //
 		todo = new Lane("Todo", createTasks("#2ecc71"));
 		doing = new Lane("Doing", createTasks("#3498db"));
 		done = new Lane("Done", createTasks("#e74c3c"));
 		review = new Lane("Review", createTasks("#9b59b6"));
+		
 	}
 	
 	private void layoutControls() {
