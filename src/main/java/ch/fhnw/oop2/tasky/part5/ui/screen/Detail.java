@@ -1,5 +1,11 @@
 package ch.fhnw.oop2.tasky.part5.ui.screen;
 
+import ch.fhnw.oop2.tasky.part1.model.State;
+import ch.fhnw.oop2.tasky.part1.model.Task;
+import ch.fhnw.oop2.tasky.part1.model.TaskData;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -32,10 +38,12 @@ final class Detail extends GridPane {
 	private TextArea descriptionField;
 	
 	private DatePicker datePicker;
-	private ComboBox<String> stateDropDown;
+	private ComboBox<State> stateDropDown;
 	
 	private Button save;
 	private Button delete;
+	
+	private LongProperty actuallId;
 	
 	/**
 	 * Erzeugt eine neue Detailansicht.
@@ -58,9 +66,16 @@ final class Detail extends GridPane {
 		
 		datePicker = new DatePicker();
 		stateDropDown = new ComboBox<>();
+		stateDropDown.setItems(FXCollections.observableArrayList(State.values()));
 		
 		save = new Button("Save");
 		delete = new Button("Delete");
+		
+		actuallId = new SimpleLongProperty();	
+		actuallId.bindBidirectional(ApplicationUI.getSelectetTask());	
+		actuallId.addListener(x -> updateView());
+		save.setOnAction(cklicked -> updateSelectedTask());
+		
 	}
 	
 	private void layoutControls() {
@@ -98,4 +113,27 @@ final class Detail extends GridPane {
 		add(buttons, 0, 5, 2, 1);
 		GridPane.setMargin(buttons, new Insets(20, 0, 0, 0));
 	}
+	
+	
+	private Object updateSelectedTask() {
+		
+		Task tempTask = ApplicationUI.getRepository().read(ApplicationUI.getSelectetTask().intValue());
+		
+		ApplicationUI.getRepository().update(new Task(tempTask.id, new TaskData(tempTask.data.title, tempTask.data.desc, tempTask.data.dueDate, tempTask.data.state)));
+		return null;
+	}
+
+	private void  updateView() {
+	System.out.println("update:");
+	Task tempTask = ApplicationUI.getRepository().read(ApplicationUI.getSelectetTask().intValue());
+	
+	idField.setText(String.valueOf(tempTask.id));
+	titleField.setText(String.valueOf(tempTask.data.title));
+	descriptionField.setText(String.valueOf(tempTask.data.desc));
+	datePicker.setValue(tempTask.data.dueDate);		
+	stateDropDown.getSelectionModel().select(tempTask.data.state.ordinal());
+	}
+
+
+	
 }

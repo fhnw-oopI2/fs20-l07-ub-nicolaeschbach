@@ -16,16 +16,18 @@ final class Lane extends GridPane {
 	private Label label;
 	private List<Task> tasks;
 	private int row = 0;
-
+	private ApplicationUI gui;
 	
 	/**
 	 * Erzeugt eine neue Lane.
 	 * 
 	 * @param labelText Der Labeltext für die Lane
 	 * @param tasks Die Tasks in den Lane
+	 * @param gui 
 	 */
-	Lane(String labelText, List<Task> tasks) {
+	Lane(String labelText, List<Task> tasks, ApplicationUI gui) {
 		this.tasks = tasks;
+		this.gui = gui;
 		initializeControls(labelText);
 		layoutControls();
 	}
@@ -38,7 +40,7 @@ final class Lane extends GridPane {
 	private void layoutControls() {
 		// Nur eine Spalte für diese Lane.
 		ConstraintHelper.setColumnPercentConstraint(this, 100);
-		setGridLinesVisible(true);
+
 		// Für das Label.
 		add(label, 0, 0);
 		ConstraintHelper.setRowPercentConstraint(this, 5);
@@ -49,51 +51,22 @@ final class Lane extends GridPane {
 		
 //		updateLane();
 		row = 1;
-		tasks.stream()
-			.forEach(task -> {
-				TaskUi newTask = new TaskUi(0);
-				ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
-				add(newTask, 0, row++);
-				GridPane.setMargin(newTask, new Insets(3));
-			});
-//		setGridLinesVisible(true);  //temp
-//		TaskUi newTask = new TaskUi(0);
-//		ConstraintHelper.setRowPercentConstraint(newTask, 95.0 / MAX_TASKS_PER_LANE);
-//		add(newTask, 0,1);
-//		GridPane.setMargin(newTask, new Insets(3));
-//		
-//		TaskUi newTask2 = new TaskUi(0);
-//		ConstraintHelper.setRowPercentConstraint(newTask2, 95.0 / MAX_TASKS_PER_LANE);
-//		add(newTask2, 0, 2);
-//		GridPane.setMargin(newTask2, new Insets(3));
 		
-//		updateLane();
-//		tasks.stream()
-//			.forEach(task -> {
-//				ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
-//				add(task, 0, row++);
-//				GridPane.setMargin(task, new Insets(3));
-//			});
+		// Zeichne Spalte neu
+		updateLane();
+
 	}
-	
+
 	private void updateLane() {
-		
-		
-//		row = 0;
+		row = 1;
+		tasks.stream()
+		.forEach(task -> {
+			TaskUi newTask = new TaskUi(task,gui);
+			ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
+			add(newTask, 0, row++);
+			GridPane.setMargin(newTask, new Insets(3));
+		});
 
-		TaskUi newTask = new TaskUi( 0);
-		add(newTask,2,0);
-//		tasks.stream()S
-//		.forEach(task -> {
-//			TaskUi newTask = new TaskUi(task.id);
-//			add(newTask,0,row++);S
-//			ConstraintHelper.setRowPercentConstraint(newTask, TASK_TITEL_HIGHT);
-//			ConstraintHelper.setRowPercentConstraint(newTask, TASK_DESCRIPTION_HIGHT);
-
-//			ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
-//			add(task, 0, row++);
-//			GridPane.setMargin(task, new Insets(3));
-//		});
 		
 		
 	}		

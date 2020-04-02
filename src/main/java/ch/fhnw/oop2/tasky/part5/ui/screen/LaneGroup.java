@@ -37,40 +37,24 @@ final class LaneGroup extends GridPane {
 		layoutControls(stateLines);
 	}
 	
-
-
 	private void initializeControls(ApplicationUI gui) {
 		create = new Button("New");
 		refresh = new Button("Refresh");
-		create.setOnAction(event -> { gui.createNewTask();});
-
-
-		setGridLinesVisible(true);	
-
+		create.setOnAction(event -> { gui.createNewTask();
+										});
 		}
 	
-
-	
 	private void layoutControls(List<Lane> lanes) {
+		setMargin(this, new Insets(10));
 		ConstraintHelper.setRowPercentConstraint(this, LANE_HEIGHT_PERCENT);
 		column = 0;
 		lanes.stream()
 			.forEach(lane -> {
 				ConstraintHelper.setColumnPercentConstraint(this, ONE_HUNDRED_PERCENT / lanes.size());		
-	//			ConstraintHelper.setRowPercentConstraint(lane, LANE_HEIGHT_PERCENT);
 				add(lane,column++,0);
-				System.out.println(column);
 				});
 		
-		
-//		IntStream.range(0, lanes.length)
-//			.forEach(index -> {				
-//				ConstraintHelper.setColumnPercentConstraint(this, ONE_HUNDRED_PERCENT / lanes.length);				
-//				add(lanes[index], index, 0);
-//			});
-	
 		ConstraintHelper.setRowPercentConstraint(this, BOTTOM_HEIGHT_PERCENT);
-		
 		HBox buttons = new HBox();
 		buttons.setSpacing(10);
 		buttons.getChildren().addAll(create, refresh);

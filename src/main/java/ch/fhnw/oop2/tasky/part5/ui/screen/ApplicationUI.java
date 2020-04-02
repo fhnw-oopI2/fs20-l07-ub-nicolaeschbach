@@ -27,12 +27,9 @@ public final class ApplicationUI extends GridPane {
 	private static final int TASKLANE_PERCENT = 60;
 	private static final int DETAILS_PERCENT = 40;
 	
-	private Lane todo;
-	private Lane doing;
-	private Lane done;
-	private Lane review;
-	private InMemoryMapRepository repository; //
-	private LongProperty taskSelected; //
+
+	private static InMemoryMapRepository repository; //
+	private static LongProperty taskSelected; //
 	private List<Lane> stateLines;
 	/**
 	 * Erzeugt einen neuen MainScreen.
@@ -41,19 +38,12 @@ public final class ApplicationUI extends GridPane {
 		repository = new InMemoryMapRepository(); //
 		taskSelected = new SimpleLongProperty(); //
 		
-
 		repository.create(new TaskData("Task1", "erster Task fuer test" , LocalDate.now(), State.Todo));
 		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Doing));
 		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
 		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
 		repository.create(new TaskData("Task1", "erster Task fuer test" , LocalDate.now(), State.Todo));
 		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
-		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
-		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
-		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
-		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
-		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
-		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
 		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
 //		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
 		
@@ -64,9 +54,10 @@ public final class ApplicationUI extends GridPane {
 	private void initializeControls() {
 		stateLines = new ArrayList<Lane>();
 		for (State state : State.values()) {
-			stateLines.add(new Lane(state.name(), repository.read().stream().filter(x -> x.data.state == state).collect(Collectors.toList())));
+			stateLines.add(new Lane(state.name(), repository.read().stream().filter(x -> x.data.state == state).collect(Collectors.toList()),this));
 		}
-		setGridLinesVisible(true);
+		
+		taskSelected.addListener(x -> System.out.println(taskSelected.getValue()));
 	}
 	
 	private void layoutControls() {
@@ -88,11 +79,11 @@ public final class ApplicationUI extends GridPane {
 			.forEach(n -> tasks.add(Area.createRegion(color)));
 		return tasks;
 		
-//		return null;
+
 	}
 	
 	
-	public Repository getRepository() {
+	public static Repository getRepository() {
 		return repository;
 	}
 	
@@ -100,9 +91,12 @@ public final class ApplicationUI extends GridPane {
 		;
 	}
 	
-	public void createNewTask() {
-		repository.create(new TaskData(null, null, null, null));
-		System.out.println("New Task created: "+ repository.read((repository.read().size()-1)));
-	}
+	public Task createNewTask() {
+		return repository.create(new TaskData("NeuerTask", "Beschreibung", LocalDate.now(), State.Todo));
+			}
 
+	public static LongProperty getSelectetTask() {
+		return taskSelected;
+	}
+	
 }
