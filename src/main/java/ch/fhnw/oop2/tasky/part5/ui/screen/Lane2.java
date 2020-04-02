@@ -10,9 +10,11 @@ import javafx.scene.layout.GridPane;
  * Diese Klasse implementiert den visuellen Behälter für eine Task-Sorte (Todo, Doing, ...).
  * 
  */
-final class Lane extends GridPane {
+final class Lane2 extends GridPane {
 
 	private final static int MAX_TASKS_PER_LANE = 5;
+	private double TASK_TITEL_HIGHT  = 50;
+	private double TASK_DESCRIPTION_HIGHT  = 100 -TASK_TITEL_HIGHT;
 	private Label label;
 	private List<Task> tasks;
 	private int row = 0;
@@ -24,7 +26,7 @@ final class Lane extends GridPane {
 	 * @param labelText Der Labeltext für die Lane
 	 * @param tasks Die Tasks in den Lane
 	 */
-	Lane(String labelText, List<Task> tasks) {
+	Lane2(String labelText, List<Task> tasks) {
 		this.tasks = tasks;
 		initializeControls(labelText);
 		layoutControls();
@@ -38,7 +40,7 @@ final class Lane extends GridPane {
 	private void layoutControls() {
 		// Nur eine Spalte für diese Lane.
 		ConstraintHelper.setColumnPercentConstraint(this, 100);
-		setGridLinesVisible(true);
+		
 		// Für das Label.
 		add(label, 0, 0);
 		ConstraintHelper.setRowPercentConstraint(this, 5);
@@ -48,24 +50,14 @@ final class Lane extends GridPane {
 		setPadding(new Insets(5));
 		
 //		updateLane();
-		row = 1;
+		
 		tasks.stream()
 			.forEach(task -> {
 				TaskUi newTask = new TaskUi(0);
-				ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
-				add(newTask, 0, row++);
+			//		ConstraintHelper.setRowPercentConstraint(newTask, 95.0 / MAX_TASKS_PER_LANE);
+				this.add(newTask, 0, row++);
 				GridPane.setMargin(newTask, new Insets(3));
 			});
-//		setGridLinesVisible(true);  //temp
-//		TaskUi newTask = new TaskUi(0);
-//		ConstraintHelper.setRowPercentConstraint(newTask, 95.0 / MAX_TASKS_PER_LANE);
-//		add(newTask, 0,1);
-//		GridPane.setMargin(newTask, new Insets(3));
-//		
-//		TaskUi newTask2 = new TaskUi(0);
-//		ConstraintHelper.setRowPercentConstraint(newTask2, 95.0 / MAX_TASKS_PER_LANE);
-//		add(newTask2, 0, 2);
-//		GridPane.setMargin(newTask2, new Insets(3));
 		
 //		updateLane();
 //		tasks.stream()
@@ -83,7 +75,7 @@ final class Lane extends GridPane {
 
 		TaskUi newTask = new TaskUi( 0);
 		add(newTask,2,0);
-//		tasks.stream()S
+//		tasks.stream()
 //		.forEach(task -> {
 //			TaskUi newTask = new TaskUi(task.id);
 //			add(newTask,0,row++);S

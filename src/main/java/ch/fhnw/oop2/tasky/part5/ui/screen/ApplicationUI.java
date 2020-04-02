@@ -3,6 +3,7 @@ package ch.fhnw.oop2.tasky.part5.ui.screen;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ch.fhnw.oop2.tasky.part1.model.Repository;
@@ -32,7 +33,7 @@ public final class ApplicationUI extends GridPane {
 	private Lane review;
 	private InMemoryMapRepository repository; //
 	private LongProperty taskSelected; //
-	
+	private List<Lane> stateLines;
 	/**
 	 * Erzeugt einen neuen MainScreen.
 	 */
@@ -40,34 +41,43 @@ public final class ApplicationUI extends GridPane {
 		repository = new InMemoryMapRepository(); //
 		taskSelected = new SimpleLongProperty(); //
 		
+
 		repository.create(new TaskData("Task1", "erster Task fuer test" , LocalDate.now(), State.Todo));
 		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Doing));
 		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
+		repository.create(new TaskData("Task1", "erster Task fuer test" , LocalDate.now(), State.Todo));
+		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
+		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
+		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
+		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Done));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
+//		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Review));
 		
 		initializeControls();
 		layoutControls();
 	}
 	
 	private void initializeControls() {
-
+		stateLines = new ArrayList<Lane>();
 		for (State state : State.values()) {
-			
+			stateLines.add(new Lane(state.name(), repository.read().stream().filter(x -> x.data.state == state).collect(Collectors.toList())));
 		}
-		todo = new Lane("Todo", repository.read());
-		doing = new Lane("Doing", repository.read());
-		done = new Lane("Done", repository.read());
-		review = new Lane("Review", repository.read());
-		
+		setGridLinesVisible(true);
 	}
 	
 	private void layoutControls() {
-		ConstraintHelper.setRowPercentConstraint(this, 100); // Höhe soll generell voll ausgefüllt werden.
-		
+		ConstraintHelper.setRowPercentConstraint(this, 100); // Höhe soll generell voll ausgefüllt werden.		
 		ConstraintHelper.setColumnPercentConstraint(this, TASKLANE_PERCENT);
-		add(new LaneGroup(this, todo, doing, done, review), 0, 0);
+		
+		add(new LaneGroup(this, stateLines), 0, 0);
 		
 		ConstraintHelper.setColumnPercentConstraint(this, DETAILS_PERCENT);
 		add(new Detail(), 1, 0);
+		
 	}
 	
 	private List<Region> createTasks(String color) {
