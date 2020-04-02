@@ -17,7 +17,8 @@ public final class Tasky extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		Parent root = new ApplicationUI();
+		ApplicationUI gui = new ApplicationUI();
+		Parent root = gui;
 		
 		final Scene scene = new Scene(root, 800, 400);
 	

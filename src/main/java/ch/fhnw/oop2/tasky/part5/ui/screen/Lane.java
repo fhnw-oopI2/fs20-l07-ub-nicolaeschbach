@@ -1,7 +1,9 @@
 package ch.fhnw.oop2.tasky.part5.ui.screen;
 
+import java.lang.Thread.State;
 import java.util.List;
 
+import ch.fhnw.oop2.tasky.part1.model.Task;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -14,9 +16,11 @@ import javafx.scene.layout.Region;
 final class Lane extends GridPane {
 
 	private final static int MAX_TASKS_PER_LANE = 5;
+	private double TASK_TITEL_HIGHT  = 50;
+	private double TASK_DESCRIPTION_HIGHT  = 100 -TASK_TITEL_HIGHT;
 	private Label label;
-	private List<Region> tasks;
-	private int row;
+	private List<Task> tasks;
+	private int row = 0;
 
 	
 	/**
@@ -25,9 +29,9 @@ final class Lane extends GridPane {
 	 * @param labelText Der Labeltext für die Lane
 	 * @param tasks Die Tasks in den Lane
 	 */
-	Lane(String labelText, List<Region> tasks) {
+	Lane(String labelText, List<Task> tasks) {
 		this.tasks = tasks;
-		row = 1;
+
 		
 		initializeControls(labelText);
 		layoutControls();
@@ -35,6 +39,9 @@ final class Lane extends GridPane {
 	
 	private void initializeControls(String labelText) {
 		label = new Label(labelText);
+		
+		tasks.stream()
+			.filter(x-> x == null);
 	}
 	
 	private void layoutControls() {
@@ -49,11 +56,30 @@ final class Lane extends GridPane {
 		// Padding für die Lane.
 		setPadding(new Insets(5));
 		
-		tasks.stream()
-			.forEach(task -> {
-				ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
-				add(task, 0, row++);
-				GridPane.setMargin(task, new Insets(3));
-			});
+//		tasks.stream()
+//			.forEach(task -> {
+//				ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
+//				add(task, 0, row++);
+//				GridPane.setMargin(task, new Insets(3));
+//			});
 	}
+	
+	private void updateLane() {
+		row = 0;
+		tasks.stream()
+		.forEach(task -> {
+			TaskUi newTask = new TaskUi(task.id);
+			add(newTask,0,row++);
+			ConstraintHelper.setRowPercentConstraint(newTask, TASK_TITEL_HIGHT);
+			ConstraintHelper.setRowPercentConstraint(newTask, TASK_DESCRIPTION_HIGHT);
+
+//			ConstraintHelper.setRowPercentConstraint(this, 95.0 / MAX_TASKS_PER_LANE);
+//			add(task, 0, row++);
+//			GridPane.setMargin(task, new Insets(3));
+		});
+		
+		
+	}		
+	
+	
 }

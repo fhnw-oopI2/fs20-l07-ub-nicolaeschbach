@@ -2,6 +2,9 @@ package ch.fhnw.oop2.tasky.part5.ui.screen;
 
 import java.util.stream.IntStream;
 
+import com.sun.java.accessibility.util.GUIInitializedListener;
+
+import ch.fhnw.oop2.tasky.part1.model.State;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -27,15 +30,17 @@ final class LaneGroup extends GridPane {
 	 * 
 	 * @param lanes Die Lanes in der Gruppe
 	 */
-	LaneGroup(Lane... lanes) {
-		initializeControls();
+	LaneGroup(ApplicationUI gui, Lane... lanes) {
+		initializeControls(gui);
 		layoutControls(lanes);
 	}
 	
-	private void initializeControls() {
+
+
+	private void initializeControls(ApplicationUI gui) {
 		create = new Button("New");
 		refresh = new Button("Refresh");
-		create.setOnAction(event -> { 	
+		create.setOnAction(event -> { gui.createNewTask();
 										
 		});
 	}

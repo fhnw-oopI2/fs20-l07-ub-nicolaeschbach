@@ -1,9 +1,14 @@
 package ch.fhnw.oop2.tasky.part5.ui.screen;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import ch.fhnw.oop2.tasky.part1.model.Repository;
+import ch.fhnw.oop2.tasky.part1.model.State;
+import ch.fhnw.oop2.tasky.part1.model.Task;
+import ch.fhnw.oop2.tasky.part1.model.TaskData;
 import ch.fhnw.oop2.tasky.part1.model.impl.InMemoryMapRepository;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -25,24 +30,33 @@ public final class ApplicationUI extends GridPane {
 	private Lane doing;
 	private Lane done;
 	private Lane review;
-	private InMemoryMapRepository taskRepository; //
+	private InMemoryMapRepository repository; //
 	private LongProperty taskSelected; //
 	
 	/**
 	 * Erzeugt einen neuen MainScreen.
 	 */
 	public ApplicationUI() {
+		repository = new InMemoryMapRepository(); //
+		taskSelected = new SimpleLongProperty(); //
+		
+		repository.create(new TaskData("Task1", "erster Task fuer test" , LocalDate.now(), State.Todo));
+		repository.create(new TaskData("Task2", "zweiter Task fuer test" , LocalDate.now(), State.Doing));
+		repository.create(new TaskData("Task3", "dritter Task fuer test" , LocalDate.now(), State.Doing));
+		
 		initializeControls();
 		layoutControls();
 	}
 	
 	private void initializeControls() {
-		taskRepository = new InMemoryMapRepository(); //
-		taskSelected = new SimpleLongProperty(); //
-		todo = new Lane("Todo", createTasks("#2ecc71"));
-		doing = new Lane("Doing", createTasks("#3498db"));
-		done = new Lane("Done", createTasks("#e74c3c"));
-		review = new Lane("Review", createTasks("#9b59b6"));
+
+		for (State state : State.values()) {
+			
+		}
+		todo = new Lane("Todo", repository.read());
+		doing = new Lane("Doing", repository.read());
+		done = new Lane("Done", repository.read());
+		review = new Lane("Review", repository.read());
 		
 	}
 	
@@ -50,7 +64,7 @@ public final class ApplicationUI extends GridPane {
 		ConstraintHelper.setRowPercentConstraint(this, 100); // Höhe soll generell voll ausgefüllt werden.
 		
 		ConstraintHelper.setColumnPercentConstraint(this, TASKLANE_PERCENT);
-		add(new LaneGroup(todo, doing, done, review), 0, 0);
+		add(new LaneGroup(this, todo, doing, done, review), 0, 0);
 		
 		ConstraintHelper.setColumnPercentConstraint(this, DETAILS_PERCENT);
 		add(new Detail(), 1, 0);
@@ -62,7 +76,23 @@ public final class ApplicationUI extends GridPane {
 		Stream.iterate(1, n -> n + 1)
 			.limit((int)(1 + Math.random() * 4))
 			.forEach(n -> tasks.add(Area.createRegion(color)));
-		
 		return tasks;
+		
+//		return null;
 	}
+	
+	
+	public Repository getRepository() {
+		return repository;
+	}
+	
+	public void displayTasks() {
+		;
+	}
+	
+	public void createNewTask() {
+		repository.create(new TaskData(null, null, null, null));
+		System.out.println("New Task created: "+ repository.read((repository.read().size()-1)));
+	}
+
 }

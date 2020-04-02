@@ -12,7 +12,7 @@ public class TaskData {
 	/**
 	 * Die Zustände, welche eine Task haben kann.
 	 */
-	public enum State { Todo, Doing, Done, Review };
+
 	
 	public final LocalDate dueDate;
 	public final State state;
@@ -34,6 +34,8 @@ public class TaskData {
 		this.desc = desc;
 	}
 	
+
+
 	@Override
 	public String toString() {
 		return "title= " + title + ", desc= " + desc + ", dueDate= " + dueDate +", state= " + state;
